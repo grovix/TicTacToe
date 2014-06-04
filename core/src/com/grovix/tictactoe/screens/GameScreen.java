@@ -1,11 +1,15 @@
 package com.grovix.tictactoe.screens;
 
 import com.badlogic.gdx.Screen;
-import com.grovix.tictactoe.field.Field;
+import com.grovix.tictactoe.field.FieldScreen;
 
 public class GameScreen implements Screen {
-	Field field;
-	@Override
+	FieldScreen field;
+	boolean AI;
+	
+	public GameScreen(boolean is_AI_on){
+		AI = is_AI_on;
+	}
 	public void render(float delta) {
 		field.render();
 	}
@@ -17,7 +21,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		field = new Field();
+		field = new FieldScreen(AI);
 		field.create();
 	}
 

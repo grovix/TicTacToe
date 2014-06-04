@@ -8,6 +8,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,6 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.grovix.tictactoe.tween.ActorAccessor;
 import com.grovix.tictactoe.tween.SpriteAccessor;
 
@@ -69,6 +72,8 @@ public class MainMenu implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		//stage.setViewport(width, height, true);
+		stage.getCamera().viewportHeight = height;
+		stage.getCamera().viewportWidth = width;
 		setupTable();
 		table.invalidateHierarchy();
 	}
@@ -88,7 +93,9 @@ public class MainMenu implements Screen {
 		Tween.set(splash, SpriteAccessor.ALPHA).target(1).start(tweenManager);
 		
 		//creating menu
-		stage = new Stage();
+    	OrthographicCamera camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    	Viewport viewport = new ScreenViewport(camera);
+		stage = new Stage(viewport);
 		Gdx.input.setInputProcessor(stage); 
 		
 		atlas = new TextureAtlas(Gdx.files.internal("ui/button.pack"));
@@ -109,7 +116,7 @@ public class MainMenu implements Screen {
 		buttonOnePlay.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(false));
 			}
 		}
 		);
@@ -119,7 +126,7 @@ public class MainMenu implements Screen {
 		buttonTwoPlay.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(true));
 			}
 		}
 		);
