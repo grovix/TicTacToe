@@ -33,9 +33,15 @@ public class FieldScreen implements ApplicationListener {
 	private Vector2[][] cellCords;
 	private int field_size = 40;
 	public boolean AI;
+	public boolean is_game_end = false;
 	
     public class MyActor extends Actor {
-        Texture texture = new Texture(Gdx.files.internal("img/field.png"));
+        Texture texture = new Texture(Gdx.files.internal("img/field.jpg"));
+        Texture zero_usual = new Texture(Gdx.files.internal("img/zero_usual.png"));
+        Texture zero_win = new Texture(Gdx.files.internal("img/zero_win.png"));
+        Texture cross_usual = new Texture(Gdx.files.internal("img/cross_usual.png"));
+        Texture cross_win = new Texture(Gdx.files.internal("img/cross_win.png"));
+
         float actorX = 0, actorY = 0;
         public boolean started = false;
 
@@ -47,6 +53,22 @@ public class FieldScreen implements ApplicationListener {
         @Override
         public void draw(Batch batch, float alpha){
             batch.draw(texture,-Gdx.graphics.getWidth()/2,-Gdx.graphics.getHeight()/2);
+            if(!is_game_end){
+	            for(int i =0; i < field_size -1; ++i){
+	            	for(int j = 0; j < field_size - 1; ++j){
+	            		if(field.is_filled[i][j]){
+	            			if(field.is_cross[i][j]){
+	            	            batch.draw(cross_usual,cellCords[i][j].x + cellWidth/2 + 1403f,
+	            	            		cellCords[i][j].y - cellWidth/2 + 1425f);
+	            			}
+	            			else{
+	            	            batch.draw(zero_usual,cellCords[i][j].x + cellWidth/2 + 1400f,
+	            	            		cellCords[i][j].y - cellWidth/2 + 1428f);
+	            			}
+	            		}
+	            	}
+	            }
+            }
         }
         
     }
@@ -141,6 +163,7 @@ public class FieldScreen implements ApplicationListener {
     public void mouseClickAction(Vector2 index){
     	if(access_token && !(((int)index.x == 0) || ((int)index.y == 0))){
     		field.fillCell((int)index.x -1, (int)index.y - 1, figure);
+    		figure = !figure;
     	}
     }
     

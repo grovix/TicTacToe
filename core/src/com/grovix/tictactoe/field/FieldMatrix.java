@@ -2,9 +2,9 @@ package com.grovix.tictactoe.field;
 
 public class FieldMatrix {
 	private int field_size = 49;
-	private boolean[][] is_filled = new boolean[field_size][field_size];
+	public boolean[][] is_filled = new boolean[field_size][field_size];
 	//x - true, o - false
-	private boolean[][] is_cross = new boolean[field_size][field_size];
+	public boolean[][] is_cross = new boolean[field_size][field_size];
 	public boolean isFieldEmpty;
 	
 	public FieldMatrix(){
