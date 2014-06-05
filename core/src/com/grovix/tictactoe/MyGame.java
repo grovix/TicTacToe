@@ -1,9 +1,7 @@
 package com.grovix.tictactoe;
 
 import com.badlogic.gdx.Game;
-import com.grovix.tictactoe.field.FieldScreen;
 import com.grovix.tictactoe.screens.GameScreen;
-import com.grovix.tictactoe.screens.MainMenu;
 
 public class MyGame extends Game {
 	

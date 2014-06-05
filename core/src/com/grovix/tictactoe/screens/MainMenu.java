@@ -116,7 +116,7 @@ public class MainMenu implements Screen {
 		buttonOnePlay.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(false));
+				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(true));
 			}
 		}
 		);
@@ -126,7 +126,7 @@ public class MainMenu implements Screen {
 		buttonTwoPlay.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(true));
+				((Game) Gdx.app.getApplicationListener()).setScreen(new GameScreen(false));
 			}
 		}
 		);
