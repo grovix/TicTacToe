@@ -45,6 +45,7 @@ public class FieldScreen implements ApplicationListener {
 	public int check = 0;
 	BitmapFont font;
 	String str;
+	public boolean is_highlighted = false;
 	
     public class MyActor extends Actor {
         Texture texture = new Texture(Gdx.files.internal("img/field.jpg"));
@@ -85,6 +86,35 @@ public class FieldScreen implements ApplicationListener {
             			else{
             	            batch.draw(zero_usual,cellCords[i][j].x + cellWidth/2 + 1400f,
             	            		cellCords[i][j].y - cellWidth/2 + 1428f);
+            			}
+            		}
+            	}
+            	
+            	if(is_highlighted){
+            		int size = field.moveList.size();
+            		int tX=0, tY=0;
+            		if(size > 0){
+            			tX = (int)field.moveList.get(size -1).x;
+            			tY = (int)field.moveList.get(size -1).y;
+            			if(field.is_cross[tX][tY]){
+            	            batch.draw(cross_win,cellCords[tX][tY].x + cellWidth/2 + 1403f,
+            	            		cellCords[tX][tY].y - cellWidth/2 + 1425f);
+            			}
+            			else{
+            	            batch.draw(zero_win,cellCords[tX][tY].x + cellWidth/2 + 1400f,
+            	            		cellCords[tX][tY].y - cellWidth/2 + 1428f);
+            			}
+            			if(size > 1){
+                			tX = (int)field.moveList.get(size -2).x;
+                			tY = (int)field.moveList.get(size -2).y;
+                			if(field.is_cross[tX][tY]){
+                	            batch.draw(cross_win,cellCords[tX][tY].x + cellWidth/2 + 1403f,
+                	            		cellCords[tX][tY].y - cellWidth/2 + 1425f);
+                			}
+                			else{
+                	            batch.draw(zero_win,cellCords[tX][tY].x + cellWidth/2 + 1400f,
+                	            		cellCords[tX][tY].y - cellWidth/2 + 1428f);
+                			}
             			}
             		}
             	}
@@ -208,6 +238,14 @@ public class FieldScreen implements ApplicationListener {
         		case 'r':
         			reset();
         			break;
+        		case 'f':
+        			if(access_token || check != 0){
+	        			field.stepBack();
+	        			figure = Args.cross;
+	        			check = 0;
+	        			access_token = true;
+        			}
+        			break;
         		}
         		return true; 	
         	}
@@ -220,6 +258,18 @@ public class FieldScreen implements ApplicationListener {
         			
 					((Game) Gdx.app.getApplicationListener()).setScreen(new MainMenu());
         			break;
+        		case Keys.C:
+        			is_highlighted = true;
+        			break;
+        		}
+        		return true;
+        	}
+        	
+        	public boolean keyUp(int keycode) {
+        		switch(keycode){
+	    		case Keys.C:
+	    			is_highlighted = false;
+	    			break;
         		}
         		return true;
         	}

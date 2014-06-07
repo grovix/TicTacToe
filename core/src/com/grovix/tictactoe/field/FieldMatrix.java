@@ -13,7 +13,7 @@ public class FieldMatrix {
 	public boolean isFieldEmpty;
 	public FieldScreen fieldScreen;
 	List<Vector2> winList;
-	List<Vector2> moveList;
+	public List<Vector2> moveList;
 	
 	public FieldMatrix(FieldScreen f_screen){
 		fieldScreen = f_screen;
@@ -32,6 +32,7 @@ public class FieldMatrix {
 			is_filled[x][y] = true;
 			is_cross[x][y] = cell_type;
 			isFieldEmpty = false;
+			moveList.add(new Vector2(x,y));
 		}
 		else if(!is_filled[x][y]){
 			boolean is_near_filled = false;
@@ -43,6 +44,7 @@ public class FieldMatrix {
 			if(is_near_filled){
 				is_filled[x][y]= true;
 				is_cross[x][y]=cell_type;
+				moveList.add(new Vector2(x,y));
 			}
 		}
 	}
@@ -129,18 +131,17 @@ public class FieldMatrix {
 		winList.clear();		
 		counter = 0;
 		int i = x;
-		j = (y-4 >= 0)?(y-4):0;
-		for(;(j <= ((y+4 < field_size)?(y+4):field_size));++j){
-			if(is_filled[i][j]){
-				if(token == is_cross[i][j]){
-					winList.add(new Vector2(i,j));
+		for(int k = (y-4 >= 0)?(y-4):0;(k <= ((y+4 < field_size)?(y+4):field_size));++k){
+			if(is_filled[i][k]){
+				if(token == is_cross[i][k]){
+					winList.add(new Vector2(i,k));
 					counter++;
 				}
 				else{
 					winList.clear();		
-					winList.add(new Vector2(i,j));
+					winList.add(new Vector2(i,k));
 					counter = 1;
-					token = is_cross[i][j];
+					token = is_cross[i][k];
 				}
 			}
 			if(counter == 5){
@@ -164,6 +165,28 @@ public class FieldMatrix {
 				is_filled[i][j] = false;
 			}
 		}
+	}
+	
+	public void stepBack(){
+		int tX=0, tY=0;
+		int size = moveList.size();
+		if(size != 0){
+			tX = (int)moveList.get(size -1).x;
+			tY = (int)moveList.get(size -1).y;
+			is_filled[tX][tY] = false;
+			if(size > 1){
+				tX = (int)moveList.get(size -2).x;
+				tY = (int)moveList.get(size -2).y;
+				is_filled[tX][tY] = false;
+			}
+		}
+		if(size != 0){
+			moveList.remove(size-1);
+			if(size -1 > 1)
+				moveList.remove(size - 2);
+		}
+		if(moveList.size() == 0)
+			isFieldEmpty = true;
 	}
 
 }
