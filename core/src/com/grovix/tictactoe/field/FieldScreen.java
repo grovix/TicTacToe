@@ -39,7 +39,7 @@ public class FieldScreen implements ApplicationListener {
 	private FieldMatrix field;
 	public boolean figure = Args.cross;
 	private Vector2[][] cellCords;
-	private int field_size = 40;
+	public int field_size = 40;
 	public boolean AI;
 	public SimpleController ai_controller;
 	public int check = 0;
@@ -213,7 +213,7 @@ public class FieldScreen implements ApplicationListener {
         	
         	@Override
         	public boolean keyTyped(char character) {
-        		float step = 25;
+        		float step = 50;
         		switch(character){
         		case 's':
         			camera.position.set(camera.position.x, camera.position.y - step, 0);
@@ -241,10 +241,12 @@ public class FieldScreen implements ApplicationListener {
         		case 'f':
         			if(access_token || check != 0){
 	        			field.stepBack();
-	        			figure = Args.cross;
 	        			check = 0;
 	        			access_token = true;
         			}
+        			break;
+        		case 'b':
+        			ai_controller.findFreeCells();
         			break;
         		}
         		return true; 	
@@ -283,18 +285,16 @@ public class FieldScreen implements ApplicationListener {
 	    		if(field.is_filled[(int)index.x-1][(int)(index.y-1)] && 
 	    				field.is_cross[(int)index.x -1][(int)index.y -1] == figure){
 	    			check = field.checkWin((int)index.x-1, (int)index.y -1);
-	    			if(check == 0)
+	    			if(check == 0){
 	    				figure = !figure;
-	        		if(AI){
-	        			access_token = false;
-	        			ai_controller.do_move(figure);
-	        			if(check == 0){
-	        				figure = !figure;
-	        			}
-	        			else{
-	        				AI = false;
-	        			}
-	        		}
+		        		if(AI){
+		        			access_token = false;
+		        			ai_controller.do_move(figure);
+		        			if(check == 0){
+		        				figure = !figure;
+		        			}
+		        		}
+	    			}
 	    		}
 	    	}
     	}

@@ -6,7 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.math.Vector2;
 
 public class FieldMatrix {
-	private int field_size = 49;
+	public int field_size = 39;
 	public boolean[][] is_filled = new boolean[field_size][field_size];
 	//x - true, o - false
 	public boolean[][] is_cross = new boolean[field_size][field_size];
@@ -36,8 +36,8 @@ public class FieldMatrix {
 		}
 		else if(!is_filled[x][y]){
 			boolean is_near_filled = false;
-			for(int i = (x - 1 >= 0)?(x-1):0; i <= ((x + 1 < field_size)?(x+1):field_size); ++i){
-				for(int j = (y - 1 >= 0)?(y-1):0; j <= ((y+1 < field_size)?(y+1):field_size); ++j){
+			for(int i = (x - 1 >= 0)?(x-1):0; i <= ((x + 1 < field_size)?(x+1):field_size-1); ++i){
+				for(int j = (y - 1 >= 0)?(y-1):0; j <= ((y+1 < field_size)?(y+1):field_size-1); ++j){
 					is_near_filled|=is_filled[i][j];
 				}
 			}
@@ -55,7 +55,7 @@ public class FieldMatrix {
 		int counter = 0;
 		int j = (y-4 >= 0)?(y-4):0;
 		for(int i = (x-4 >= 0)?(x-4):0; 
-		(i <= ((x+4 < field_size)?(x+4):field_size)) && (j <= ((y + 4 < field_size)?(y+4):field_size));++i){
+		(i <= ((x+4 < field_size)?(x+4):field_size-1)) && (j <= ((y + 4 < field_size)?(y+4):field_size-1));++i){
 			if(is_filled[i][j]){
 				if(token == is_cross[i][j]){
 					winList.add(new Vector2(i,j));
@@ -68,6 +68,7 @@ public class FieldMatrix {
 					token = is_cross[i][j];
 				}
 			}
+			else counter = 0;
 			j++;
 			if(counter == 5){
 				if(token == Args.zero)
@@ -79,9 +80,9 @@ public class FieldMatrix {
 		
 		winList.clear();		
 		counter = 0;
-		j = ((y + 4 < field_size)?(y+4):field_size);
+		j = ((y + 4 < field_size)?(y+4):field_size-1);
 		for(int i = (x-4 >= 0)?(x-4):0; 
-		(i <= ((x+4 < field_size)?(x+4):field_size)) && (j >= ((y-4 >= 0)?(y-4):0));++i){
+		(i <= ((x+4 < field_size)?(x+4):field_size-1)) && (j >= ((y-4 >= 0)?(y-4):0));++i){
 			if(is_filled[i][j]){
 				if(token == is_cross[i][j]){
 					winList.add(new Vector2(i,j));
@@ -94,6 +95,7 @@ public class FieldMatrix {
 					token = is_cross[i][j];
 				}
 			}
+			else counter = 0;
 			j--;
 			if(counter == 5){
 				if(token == Args.zero)
@@ -107,7 +109,7 @@ public class FieldMatrix {
 		counter = 0;
 		j = y;
 		for(int i = (x-4 >= 0)?(x-4):0; 
-		(i <= ((x+4 < field_size)?(x+4):field_size));++i){
+		(i <= ((x+4 < field_size)?(x+4):field_size-1));++i){
 			if(is_filled[i][j]){
 				if(token == is_cross[i][j]){
 					winList.add(new Vector2(i,j));
@@ -120,6 +122,7 @@ public class FieldMatrix {
 					token = is_cross[i][j];
 				}
 			}
+			else counter = 0;
 			if(counter == 5){
 				if(token == Args.zero)
 					return 1;
@@ -131,7 +134,7 @@ public class FieldMatrix {
 		winList.clear();		
 		counter = 0;
 		int i = x;
-		for(int k = (y-4 >= 0)?(y-4):0;(k <= ((y+4 < field_size)?(y+4):field_size));++k){
+		for(int k = (y-4 >= 0)?(y-4):0;(k <= ((y+4 < field_size)?(y+4):field_size-1));++k){
 			if(is_filled[i][k]){
 				if(token == is_cross[i][k]){
 					winList.add(new Vector2(i,k));
@@ -144,6 +147,7 @@ public class FieldMatrix {
 					token = is_cross[i][k];
 				}
 			}
+			else counter = 0;
 			if(counter == 5){
 				if(token == Args.zero)
 					return 1;
@@ -151,6 +155,7 @@ public class FieldMatrix {
 					return 2;
 			}
 		}
+		winList.clear();		
 		return 0;
 	}
 
@@ -174,7 +179,7 @@ public class FieldMatrix {
 			tX = (int)moveList.get(size -1).x;
 			tY = (int)moveList.get(size -1).y;
 			is_filled[tX][tY] = false;
-			if(size > 1){
+			if(size -1 >= 1){
 				tX = (int)moveList.get(size -2).x;
 				tY = (int)moveList.get(size -2).y;
 				is_filled[tX][tY] = false;
@@ -182,8 +187,9 @@ public class FieldMatrix {
 		}
 		if(size != 0){
 			moveList.remove(size-1);
-			if(size -1 > 1)
+			if(size - 1 >= 1){
 				moveList.remove(size - 2);
+			}
 		}
 		if(moveList.size() == 0)
 			isFieldEmpty = true;
