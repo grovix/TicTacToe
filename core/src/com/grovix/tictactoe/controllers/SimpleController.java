@@ -12,7 +12,7 @@ public class SimpleController {
 	
 	public int zero_wins = 10000;
 	public int cross_wins = 1000;
-	public int val_factor = 4;
+	public int val_factor = 1;
 	public int field_size;
 	FieldMatrix field;
 	public boolean[][] free_cells;
@@ -22,6 +22,7 @@ public class SimpleController {
 	public List<Integer> max_var;
 	public List<Vector2> ind_vars;
 	Random rand = new Random();
+	public boolean AI_figure = Args.zero;
 
 	public SimpleController(FieldMatrix in_field){
 		field = in_field;
@@ -112,6 +113,7 @@ public class SimpleController {
 	
 	public int calcWeightFun(int x,int y, boolean figure){
 		
+		int quad = 0;
 		field.is_filled[x][y] = true;
 		field.is_cross[x][y] = figure;
 		int series_length = 0;
@@ -125,20 +127,33 @@ public class SimpleController {
 				if(field.is_filled[x-4+i+j][y]){
 					if(field.is_cross[x-4+i+j][y] != figure){
 						series_length = 0;
+						quad = 0;
 						break;
 					}
-					else
+					else{
 						series_length++;
+						quad++;
+					}
+				}
+				else{
+					quad=0;
 				}
 			}
 			if (series_length == 1) series_length = 0;//Ряд из самой клетки не учитываем
 			//Плюсуем серию к общей сумме
 			pow_st = val_factor;
 			if (series_length == 5){
-				if (figure == Args.zero)
-					pow_st = 10000;//Большое значение при своем выигрыше
+				if (figure == AI_figure)
+					pow_st = 20000;//Большое значение при своем выигрыше
 				else
-					pow_st = 1000; //Большое значение при выигрыше соперника, но меньшее, чем при своем
+					pow_st = 2000; //Большое значение при выигрыше соперника, но меньшее, чем при своем
+			}
+			else if(quad == 4 && figure == !AI_figure){
+				pow_st = 1000;
+			}
+			else if(quad == 4 && figure == AI_figure){
+				pow_st = 1500;
+				System.out.println("quad");
 			}
 			else{
 				pow_st=(int)Math.pow(val_factor, series_length);
@@ -147,7 +162,7 @@ public class SimpleController {
 			series_length = 0;
 			
 		}
-		
+		quad =0;
 ///////////Расчет слева направо/////////
 		for (int i = 0;i<5;i++){
 			if ((y-4+i) < 0) continue;
@@ -155,18 +170,31 @@ public class SimpleController {
 			for (int j=0;j<5;j++){
 				if ((field.is_cross[x][y-4+i+j] != figure) && (field.is_filled[x][y-4+i+j])){
 					series_length = 0;
+					quad = 0;
 					break;
 				}
-				if (field.is_filled[x][y-4+i+j]) series_length++; //Ряд увеличивается
+				if (field.is_filled[x][y-4+i+j]){
+					series_length++; //Ряд увеличивается
+					quad++;
+				}
+				else
+					quad = 0;
 			}
 			if (series_length == 1) series_length = 0; //Ряд из самой клетки не учитываем
 			//Плюсуем серию к общей сумме
 			pow_st = val_factor;
 			if (series_length == 5){
-				if (figure = Args.zero)
-					pow_st = 10000;//Большое значение при своем выигрыше
+				if (figure = AI_figure)
+					pow_st = 20000;//Большое значение при своем выигрыше
 				else
-					pow_st = 1000; //Большое значение при выигрыше соперника, но меньшее, чем при своем
+					pow_st = 2000; //Большое значение при выигрыше соперника, но меньшее, чем при своем
+			}
+			else if(quad == 4 && figure == !AI_figure){
+				pow_st = 1000;
+			}
+			else if(quad == 4 && figure == AI_figure){
+				pow_st = 1500;
+				System.out.println("quad");
 			}
 			else{
 				pow_st=(int)Math.pow(val_factor, series_length);
@@ -174,6 +202,7 @@ public class SimpleController {
 			sum += pow_st;
 			series_length = 0;
 		}
+		quad = 0;
 ///////////Расчет по диагонали с левого верхнего/////////
 		for (int i = 0;i<5;i++){
 			//Проверка, не вышли ли за границы поля
@@ -185,18 +214,31 @@ public class SimpleController {
 			for (int j=0;j<5;j++){
 				if ((field.is_cross[x-4+i+j][y-4+i+j] != figure) && (field.is_filled[x-4+i+j][y-4+i+j])){
 				series_length = 0;
+				quad = 0;
 				break;
 				}
-				if (field.is_filled[x-4+i+j][y-4+i+j]) series_length++; //Ряд увеличивается
+				if (field.is_filled[x-4+i+j][y-4+i+j]){
+					quad++;
+					series_length++; //Ряд увеличивается
+				}
+				else 
+					quad = 0;
 			}
 			if (series_length == 1) series_length = 0; //Ряд из самой клетки не учитываем
 			//Плюсуем серию к общей сумме
 			pow_st = val_factor;
 			if (series_length == 5){
-				if (figure == Args.zero)
-					pow_st = 10000;//Большое значение при своем выигрыше
+				if (figure == AI_figure)
+					pow_st = 20000;//Большое значение при своем выигрыше
 				else
-					pow_st = 1000; //Большое значение при выигрыше соперника, но меньшее, чем при своем
+					pow_st = 2000; //Большое значение при выигрыше соперника, но меньшее, чем при своем
+			}
+			else if(quad == 4 && figure == !AI_figure){
+				pow_st = 1000;
+			}
+			else if(quad == 4 && figure == AI_figure){
+				pow_st = 1500;
+				System.out.println("quad");
 			}
 			else{
 				pow_st=(int)Math.pow(val_factor, series_length);
@@ -206,6 +248,7 @@ public class SimpleController {
 		}
 ///////////Расчет по диагонали с левого нижнего/////////
 //Проход по каждой клетки, которая может входить в ряд
+		quad = 0;
 		for (int i = 0;i<5;i++){
 		//Проверка, не вышли ли за границы поля
 			if ((y-4+i) < 0) continue;
@@ -217,23 +260,34 @@ public class SimpleController {
 				if ((field.is_cross[x+4-i-j][y-4+i+j] != figure) && (field.is_filled[x+4-i-j][y-4+i+j])){
 				//Конец ряда
 				series_length = 0;
+				quad = 0;
 				break;
 				}
-				if (field.is_filled[x+4-i-j][y-4+i+j]) series_length++; //Ряд увеличивается
+				if (field.is_filled[x+4-i-j][y-4+i+j]) {
+					quad++;
+					series_length++; //Ряд увеличивается
+				}
+				else
+					quad = 0;
 			}
 			if (series_length == 1) series_length = 0; //Ряд из самой клетки не учитываем
 			//Плюсуем серию к общей сумме
 			pow_st = val_factor;
 			if (series_length == 5){
-				if (figure == Args.zero)
-					pow_st = 10000;//Большое значение при своем выигрыше
+				if (figure == AI_figure)
+					pow_st = 20000;//Большое значение при своем выигрыше
 				else
-					pow_st = 1000; //Большое значение при выигрыше соперника, но меньшее, чем при своем
+					pow_st = 2000; //Большое значение при выигрыше соперника, но меньшее, чем при своем
+			}
+			else if(quad == 4 && figure == !AI_figure){
+				pow_st = 1000;
+			}
+			else if(quad == 4 && figure == AI_figure){
+				pow_st = 1500;
+				System.out.println("quad");
 			}
 			else{
-				for (int k=0;k<series_length;k++){
-					pow_st*=val_factor;
-				}
+				pow_st=(int)Math.pow(val_factor, series_length);
 			}
 			sum += pow_st;
 			series_length = 0;
@@ -246,5 +300,5 @@ public class SimpleController {
 	public double getRandomDouble(int Min, int Max){
 		return Min + (int)(Math.random() * ((Max - Min) + 1));
 	}
-
+	
 }

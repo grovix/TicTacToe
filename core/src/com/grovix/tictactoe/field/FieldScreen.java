@@ -234,6 +234,8 @@ public class FieldScreen implements ApplicationListener {
         		case 'v':
         	        camera.position.set(1470.0f, 1480.0f, 0);
         	        camera.zoom = 5.5f;
+        	        stepY = 0;
+        	        stepX = 0;
         			break;
         		case 'r':
         			reset();
@@ -247,6 +249,24 @@ public class FieldScreen implements ApplicationListener {
         			break;
         		case 'b':
         			ai_controller.findFreeCells();
+        		case 'z':
+	        		if(AI){
+	        			if(!field.isFieldEmpty){
+		        			figure =! figure;
+		        			ai_controller.AI_figure = figure;
+		        			access_token = false;
+		        			ai_controller.do_move(figure);
+		        			if(check == 0){
+		        				figure = !figure;
+		        			}
+	        			}
+	        			else{
+		        			access_token = false;
+	        				field.fillCell(20, 20, figure);
+	        				figure = !figure;
+		        			access_token = true;
+	        			}
+	        		}
         			break;
         		}
         		return true; 	
